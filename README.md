@@ -4,6 +4,7 @@
 | Hang Chu | TFS-03|
 
 # Directory's tree
+```
 ├── lec-02
 │   ├── exercises
 │   │   ├── basic-calculation
@@ -31,4 +32,4 @@
 │   │       └── main.go
 │   └── README.md
 └── README.md
-
+```
