@@ -1,5 +1,5 @@
 # Todo
-* Write an API to perform basic arithmetic operations, to be connected to a simple calculator frontend later
+* Add tests for calculation api
 ## Wishlist
 * Add a loop to control input in contains package.
 * Move functional code to separate packages
@@ -8,10 +8,15 @@
 ```
 ├── exercises
 │   ├── basic-calculation
-│   │   ├── arithmetic
-│   │   │   ├── arithmetic.go
-│   │   │   └── arithmetic_test.go
-│   │   └── main.go
+│   │   └── arithmetic
+│   │       ├── arithmetic.go
+│   │       ├── arithmetic_test.go
+│   │       └── main.go
+│   ├── calculation-api
+│   │   ├── main.go
+│   │   └── server
+│   │       ├── handlers.go
+│   │       └── utils.go
 │   ├── contains
 │   │   └── main.go
 │   ├── extrema-mean-finder

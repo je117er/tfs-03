@@ -8,10 +8,15 @@
 ├── lec-02
 │   ├── exercises
 │   │   ├── basic-calculation
-│   │   │   ├── arithmetic
-│   │   │   │   ├── arithmetic.go
-│   │   │   │   └── arithmetic_test.go
-│   │   │   └── main.go
+│   │   │   └── arithmetic
+│   │   │       ├── arithmetic.go
+│   │   │       ├── arithmetic_test.go
+│   │   │       └── main.go
+│   │   ├── calculation-api
+│   │   │   ├── main.go
+│   │   │   └── server
+│   │   │       ├── handlers.go
+│   │   │       └── utils.go
 │   │   ├── contains
 │   │   │   └── main.go
 │   │   ├── extrema-mean-finder
