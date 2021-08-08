@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="src/index.js"></script>
+</head>
+<body>
+<div class="calculator">
+<table>
+    <thead>
+    <tr>
+        <td colspan="4"><label for="result"></label><input id="result" type="text" /></td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td id="is-del" colspan="3"><input type="button" value="D" onclick="del()"/></td>
+        <td class="is-clear" colspan="1"><input type="button" value="C" onclick="clr()"/></td>
+    </tr>
+    <tr>
+        <td><input type="button" value="7" onclick="display(value)"/> </td>
+        <td><input type="button" value="8" onclick="display(value)"/> </td>
+        <td><input type="button" value="9" onclick="display(value)"/> </td>
+        <td><input type="button" value="+" onclick="display(value)"/> </td>
+    </tr>
+    <tr>
+        <td><input type="button" value="4" onclick="display(value)"/> </td>
+        <td><input type="button" value="5" onclick="display(value)"/> </td>
+        <td><input type="button" value="6" onclick="display(value)"/> </td>
+        <td><input type="button" value="-" onclick="display(value)"> </td>
+    </tr>
+    <tr>
+        <td><input type="button" value="1" onclick="display(value)"/> </td>
+        <td><input type="button" value="2" onclick="display(value)"/> </td>
+        <td><input type="button" value="3" onclick="display(value)"/> </td>
+        <td><input type="button" value="*" onclick="display(value)"/> </td>
+    </tr>
+    <tr>
+        <td class="is-zero"><input type="button" value="0" onclick="display(value)"/> </td>
+        <td><input type="button" value="." onclick="display(value)"/> </td>
+        <td class="is-equals"><input type="button" value="=" onclick="equals()"/> </td>
+        <td><input type="button" value="/" onclick="display(value)"/> </td>
+    </tr>
+    </tbody>
+</table>
+</div>
+
+
+</body>
+</html>
