@@ -32,7 +32,7 @@ func eval(w http.ResponseWriter, req *http.Request) {
 	res, err := utils.Eval(exp)
 	if err != nil {
 		msg := fmt.Sprintf("Invalid expression: %s\n", exp)
-		http.Error(w, msg, http.StatusNotAcceptable)
+		http.Error(w, msg, http.StatusInternalServerError)
 	} else {
 		res1D := &result{Result: res}
 		json.NewEncoder(w).Encode(res1D)
