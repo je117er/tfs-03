@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"math"
 	"strconv"
@@ -39,7 +40,7 @@ func evaluate(x, y string, op rune) string {
 
 func abs(a float64, eps float64) string {
 	round := math.Round(a)
-	if math.Abs(a - round) < eps {
+	if math.Abs(a-round) < eps {
 		return fmt.Sprintf("%v", round)
 	}
 	return fmt.Sprintf("%v", a)
@@ -55,13 +56,13 @@ func Eval(expr string) (string, error) {
 	var literal strings.Builder
 
 	for i, c := range expr {
-		if  unicode.IsDigit(c) || c == '.' {
-				literal.WriteRune(c)
-				if i == len(expr) - 1 {
-					literals.Push(literal.String())
-				} else {
-					continue
-				}
+		if unicode.IsDigit(c) || c == '.' {
+			literal.WriteRune(c)
+			if i == len(expr)-1 {
+				literals.Push(literal.String())
+			} else {
+				continue
+			}
 		} else if precedence(c) > 0 {
 			literals.Push(literal.String())
 			literal.Reset()
@@ -72,6 +73,8 @@ func Eval(expr string) (string, error) {
 			}
 			ops.Push(c)
 
+		} else {
+			return "", errors.New("Invalid expression")
 		}
 	}
 
@@ -118,7 +121,4 @@ func Eval(expr string) (string, error) {
 	return "", nil
 }
 
- */
-
-
-
+*/

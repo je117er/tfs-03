@@ -29,11 +29,16 @@ func eval(w http.ResponseWriter, req *http.Request) {
 	q := req.URL.Query()
 	fmt.Printf("%v\n", q)
 	exp := q["exp"][0]
-	res, _ := utils.Eval(exp)
-	res1D := &result{Result: res}
-	json.NewEncoder(w).Encode(res1D)
+	res, err := utils.Eval(exp)
+	if err != nil {
+		msg := fmt.Sprintf("Invalid expression: %s\n", exp)
+		http.Error(w, msg, http.StatusNotAcceptable)
+	} else {
+		res1D := &result{Result: res}
+		json.NewEncoder(w).Encode(res1D)
 
-	//fmt.Fprintf(w, "%s", res)
+		//fmt.Fprintf(w, "%s", res)
 
-	fmt.Println(res)
+		fmt.Println(res)
+	}
 }
