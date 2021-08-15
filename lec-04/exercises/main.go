@@ -21,28 +21,41 @@ func main() {
 
 	url := os.Args[1]
 
-	wg := sync.WaitGroup{}
 	movieExplorer := make(chan string)
 	movieToJson := make(chan string)
-	for i := 0; i < 5; i ++ {
-		wg.Add(1)
-		go extractMovieLink(url, movieExplorer, &wg)
-	}
-	for i := 0; i < 3; i++ {
-		wg.Add(1)
-		go ExtractMovieDetail(movieToJson, movieExplorer, &wg)
-	}
 
-	for i := 0; i < 10; i++ {
-		wg.Add(1)
-		go AddToList(movieToJson, &wg)
-	}
-	wg.Wait()
+	go func() {
+		wg := sync.WaitGroup{}
+		defer close(movieExplorer)
+		n := 9
+		wg.Add(n)
+		for i := 0; i < n; i++ {
+			go func() {
+				defer wg.Done()
+				ExtractMovieLink(url, movieExplorer)
+			}()
+		}
+		wg.Wait()
+	}()
+
+	go func() {
+		wg := sync.WaitGroup{}
+		defer close(movieToJson)
+		n := 18
+		wg.Add(n)
+		for i := 0; i < n; i++ {
+			go func() {
+				defer wg.Done()
+				ExtractMovieDetail(movieToJson, movieExplorer)
+			}()
+		}
+		wg.Wait()
+	}()
+	AddToList(movieToJson)
 	fmt.Println(len(movies))
 }
 
-func AddToList(in <-chan string, wg *sync.WaitGroup) {
-	defer wg.Done()
+func AddToList(in <-chan string) {
 	var movie utils.Movie
 	for movieString := range in {
 		//movieString := <-in
@@ -51,14 +64,10 @@ func AddToList(in <-chan string, wg *sync.WaitGroup) {
 		}
 		movies = append(movies, movie)
 		log.Printf("number of crawled movies so far: %d", len(movies))
-		if len(movies) == 250 {
-			return
-		}
 	}
 }
 
-func extractMovieLink(url string, out chan<- string, wg *sync.WaitGroup) {
-	defer wg.Done()
+func ExtractMovieLink(url string, out chan<- string) {
 		resp, err := http.Get(url)
 		if err != nil {
 			log.Println(err)
@@ -94,12 +103,9 @@ func extractMovieLink(url string, out chan<- string, wg *sync.WaitGroup) {
 			}
 		}
 		forEachNode(doc, visitNode)
-		close(out)
-		wg.Wait()
 }
 
-func ExtractMovieDetail(out chan<- string, in <-chan string, wg *sync.WaitGroup) {
-	defer wg.Done()
+func ExtractMovieDetail(out chan<- string, in <-chan string) {
 	for movieLink := range in {
 		//movieLink := <-in
 		resp, err := http.Get(movieLink)
@@ -126,8 +132,6 @@ func ExtractMovieDetail(out chan<- string, in <-chan string, wg *sync.WaitGroup)
 
 		forEachNode(doc, visitNode)
 	}
-	close(out)
-	wg.Wait()
 }
 
 func forEachNode(n *html.Node, pre func(n *html.Node)) {
