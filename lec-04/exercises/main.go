@@ -23,11 +23,11 @@ func main() {
 
 	movieExplorer := make(chan string)
 	movieToJson := make(chan string)
-
+	n := 9
+	//var wg sync.WaitGroup
 	go func() {
 		wg := sync.WaitGroup{}
 		defer close(movieExplorer)
-		n := 9
 		wg.Add(n)
 		for i := 0; i < n; i++ {
 			go func() {
@@ -41,9 +41,8 @@ func main() {
 	go func() {
 		wg := sync.WaitGroup{}
 		defer close(movieToJson)
-		n := 18
-		wg.Add(n)
-		for i := 0; i < n; i++ {
+		wg.Add(n*2)
+		for i := 0; i < n*2; i++ {
 			go func() {
 				defer wg.Done()
 				ExtractMovieDetail(movieToJson, movieExplorer)
