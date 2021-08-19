@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/drop.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint ./src/isPalindrome.js"
   },
   "keywords": [],
   "author": "",

@@ -9,11 +9,6 @@ test('test palindrome', () => {
 })
 
 test('test palindrome', () => {
-    expect(isPalindrome("_eye")).toBe(true)
-})
-
-
-test('test palindrome', () => {
     expect(isPalindrome("0_0 (: /-\\ :) 0-0")).toBe(true)
 })
 

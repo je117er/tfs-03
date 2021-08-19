@@ -1,0 +1,11 @@
+$color-default: #333;
+$color-headline: blue;
+$width: 600px;
+section {
+  color: $color-default;
+  margin: 0 auto;
+  width: $width;
+  h2 {
+    color: $color-headline;
+}
+}
