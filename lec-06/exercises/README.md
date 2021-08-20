@@ -19,13 +19,4 @@
 ## Order
 * GET /orders
 * GET /order/:id
-
-[comment]: <> (* POST /order)
-[comment]: <> (* DELETE /order/:id)
-
-[comment]: <> (* PUT /confirm)
-* GET /pay
-
-[comment]: <> (## Payment method)
-
-[comment]: <> (* GET /paymentmethods)
+* POST /order/:id/pay

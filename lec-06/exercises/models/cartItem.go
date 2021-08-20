@@ -1,12 +1,11 @@
-package model
+package models
 
 import "github.com/jinzhu/gorm"
 
 type CartItem struct {
 	gorm.Model
-	ID        uint64
-	ProductID uint64
-	CartID    uint64
+	ProductID uint
+	CartID    uint
 	Price     float64
 	Quantity  uint8
 }
