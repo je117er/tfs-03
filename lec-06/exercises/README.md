@@ -1,4 +1,6 @@
 # Directory structure
+# ER Diagram
+![ER diagram for this exercise](db_diagram.jpg)
 # API endpoints
 ## Login
 * POST /auth/login
