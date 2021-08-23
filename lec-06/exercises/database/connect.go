@@ -2,6 +2,7 @@ package database
 
 import (
 	"exercises/config"
+	"exercises/models"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -23,29 +24,29 @@ func ConnectDB() {
 		log.Fatalf("failed to connect to database %s", err)
 	}
 
-	err = db.AutoMigrate(&UserDBModel{})
+	err = db.AutoMigrate(&models.UserDBModel{})
 	if err != nil {
 		log.Fatal("failed to apply migrations")
 	}
 
-	err = db.AutoMigrate(&ProductDBModel{})
+	err = db.AutoMigrate(&models.ProductDBModel{})
 	if err != nil {
 		log.Fatal("failed to apply migrations")
 	}
 
-	err = db.AutoMigrate(&CartDBModel{})
+	err = db.AutoMigrate(&models.CartDBModel{})
 	if err != nil {
 		log.Fatal("failed to apply migrations")
 	}
-	err = db.AutoMigrate(&CartItemDBModel{})
+	err = db.AutoMigrate(&models.CartItemDBModel{})
 	if err != nil {
 		log.Fatal("failed to apply migrations")
 	}
-	err = db.AutoMigrate(&OrderDBModel{})
+	err = db.AutoMigrate(&models.OrderDBModel{})
 	if err != nil {
 		log.Fatal("failed to apply migrations")
 	}
-	err = db.AutoMigrate(&OrderItemDBModel{})
+	err = db.AutoMigrate(&models.OrderItemDBModel{})
 	if err != nil {
 		log.Fatal("failed to apply migrations")
 	}
