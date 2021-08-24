@@ -15,11 +15,9 @@
 * PATCH /product/:id
 * POST /product
 * DELETE /product/:id
-
-[comment]: <> (* DELETE /product/:id)
 ## Cart
 * POST /cart Create a new cart
-* POST /cart/:id Put a product in the cart
+* PATCH /cart/:id Put a product in the cart
 * GET /cart/:id Get a cart's contents
 * POST /cart/:id/checkout Take an order
 ## Order

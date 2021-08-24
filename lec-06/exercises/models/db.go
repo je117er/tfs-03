@@ -11,6 +11,7 @@ var (
 	ErrProductNotFound  = errors.New("product not found")
 	ErrCartNotFound     = errors.New("cart not found")
 	ErrCartItemNotFound = errors.New("cart item not found")
+	ErrOrderNotFound    = errors.New("order not found")
 )
 
 type UserDBModel struct {
@@ -90,6 +91,13 @@ type OrderDBModel struct {
 
 func (OrderDBModel) TableName() string {
 	return "orders"
+}
+
+type PaymentDBModel struct {
+	ID            int
+	OrderID       int
+	PaymentDate   *time.Time
+	PaymentAmount *time.Time
 }
 
 type UserStorage struct {
@@ -183,7 +191,7 @@ type CartStorage struct {
 
 func (s CartStorage) ByID(id int) (CartDBModel, error) {
 	var cart CartDBModel
-	result := s.db.First(&cart, id)
+	result := s.db.Preload("CartItems").First(&cart, id)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return CartDBModel{}, ErrCartNotFound
@@ -211,4 +219,39 @@ func (s CartStorage) Update(cart CartDBModel) error {
 func (s CartStorage) Delete(id int) error {
 	result := s.db.Delete(&CartDBModel{}, id)
 	return result.Error
+}
+
+type OrderStorage struct {
+	db *gorm.DB
+}
+
+func (s OrderStorage) All() ([]OrderDBModel, error) {
+	var orders []OrderDBModel
+	result := s.db.Preload("OrderItems").Find(&orders)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return orders, nil
+}
+
+func (s OrderStorage) ByID(id int) (OrderDBModel, error) {
+	var order OrderDBModel
+	result := s.db.Preload("OrderItems").First(&order, id)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return OrderDBModel{}, ErrOrderNotFound
+		}
+		return OrderDBModel{}, result.Error
+	}
+	return order, nil
+}
+
+func (s OrderStorage) Add(order OrderDBModel) error {
+	return s.db.Transaction(func(tx *gorm.DB) error {
+		result := tx.Omit("OrderItems").Create(order)
+		if result.Error != nil {
+			return result.Error
+		}
+		return nil
+	})
 }

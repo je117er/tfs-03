@@ -96,10 +96,25 @@ type CreateCartRequest struct {
 	Total  int
 }
 
+type ProductToCartRequest struct {
+	CartID   int
+	ID       int
+	Price    float64
+	Quantity int8
+}
+
+func ProductToCartItemDBModelRequest(p ProductToCartRequest) CartItemDBModel {
+	return CartItemDBModel{
+		CartID:    p.CartID,
+		Price:     p.Price,
+		Quantity:  p.Quantity,
+		ProductID: p.ID,
+	}
+}
+
 type UpdateCartRequest struct {
 	Status   *string
-	Total    *int
-	Products []ProductResponse
+	Products *[]ProductToCartRequest
 }
 
 type CartResponse struct {
@@ -112,6 +127,7 @@ type CartResponse struct {
 
 type cartItemResponse struct {
 	ID        int
+	CartID    int
 	ProductID int
 	Price     float64
 	Quantity  int8
@@ -120,6 +136,7 @@ type cartItemResponse struct {
 func cartItemResponseFromDBModel(i CartItemDBModel) cartItemResponse {
 	return cartItemResponse{
 		ID:        i.ID,
+		CartID:    i.CartID,
 		ProductID: i.ProductID,
 		Price:     i.Price,
 		Quantity:  i.Quantity,
@@ -146,6 +163,76 @@ func CartDBModelFromCreateRequest(r CreateCartRequest) CartDBModel {
 		UserID: r.UserID,
 		Total:  0,
 		Status: r.Status,
+	}
+}
+
+type CreateCheckoutRequest struct {
+	CartID    int
+	UserID    int
+	CartItems []CartItemToOrderItemRequest
+	Total     float64
+}
+
+type CartItemToOrderItemRequest struct {
+	ProductID int
+	Price     float64
+	Quantity  int8
+}
+
+func OrderDBModelFromCreateCheckOutRequest(r CreateCheckoutRequest) OrderDBModel {
+	var orderItems []OrderItemDBModel
+	for _, e := range r.CartItems {
+		orderItems = append(orderItems, CartToOrderItemDBModelRequest(e))
+	}
+	return OrderDBModel{
+		UserID:     r.UserID,
+		Total:      r.Total,
+		OrderItems: orderItems,
+		Status:     "Unpaid",
+	}
+}
+
+func CartToOrderItemDBModelRequest(r CartItemToOrderItemRequest) OrderItemDBModel {
+	return OrderItemDBModel{
+		ProductID: r.ProductID,
+		Price:     r.Price,
+		Quantity:  r.Quantity,
+	}
+}
+
+type OrderItemResponse struct {
+	ID        int
+	ProductID int
+	Price     float64
+	Quantity  int8
+}
+
+type OrderResponse struct {
+	ID         int
+	UserID     int
+	OrderItems []OrderItemResponse
+	Total      float64
+}
+
+func OrderItemResponseFromDBModel(o OrderItemDBModel) OrderItemResponse {
+	return OrderItemResponse{
+		ID:        o.ID,
+		ProductID: o.ProductID,
+		Price:     o.Price,
+		Quantity:  o.Quantity,
+	}
+}
+
+func OrderResponseFromDBModel(o OrderDBModel) OrderResponse {
+	var orderItems []OrderItemResponse
+	for _, e := range o.OrderItems {
+		orderItems = append(orderItems, OrderItemResponseFromDBModel(e))
+	}
+	return OrderResponse{
+		ID:         o.ID,
+		UserID:     o.UserID,
+		Total:      o.Total,
+		OrderItems: orderItems,
 	}
 }
 
