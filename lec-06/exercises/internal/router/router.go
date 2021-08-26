@@ -2,7 +2,7 @@ package router
 
 import (
 	"exercises/internal/config"
-	handler2 "exercises/internal/handler"
+	handler2 "exercises/internal/handlers"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
