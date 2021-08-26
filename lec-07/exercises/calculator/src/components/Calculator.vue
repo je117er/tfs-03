@@ -72,7 +72,7 @@ export default {
       expression = expression.replace("+", "%2b");
       console.log(expression)
 
-      fetch('http://localhost:8000/eval?exp=' + expression, {
+      fetch('api/eval?exp=' + expression, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

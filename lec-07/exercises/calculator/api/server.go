@@ -1,27 +1,22 @@
-package server
+package main
 
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
-	"../utils"
+	"github.com/je117er/tfs-03/lec-07/exercises/calculator/api/utils"
 )
 
 type result struct {
 	Result string `json:"result"`
 }
 
-func InitServer() {
-
-	mux := http.NewServeMux()
-	mux.HandleFunc("/eval", eval)
-	log.Fatal(http.ListenAndServe("localhost:8000", mux))
-
-}
-
-func eval(w http.ResponseWriter, req *http.Request) {
+func Handler(w http.ResponseWriter, req *http.Request) {
+	if req.URL.Path != "/api/calc" || req.Method != "GET" {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	//json.NewEncoder(w).Encode("OKOK")
