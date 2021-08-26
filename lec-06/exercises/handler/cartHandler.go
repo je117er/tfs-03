@@ -2,7 +2,8 @@ package handler
 
 import (
 	"encoding/json"
-	"exercises/models"
+	"exercises/models/api"
+	"exercises/models/database"
 	"github.com/gorilla/mux"
 	"log"
 	"math"
@@ -11,18 +12,18 @@ import (
 )
 
 type CartHandler struct {
-	storage models.CartStorage
+	storage database.CartStorage
 }
 
 func (h CartHandler) PostCart(w http.ResponseWriter, r *http.Request) {
-	var createCartRequest models.CreateCartRequest
+	var createCartRequest api.CreateCartRequest
 	if err := json.NewDecoder(r.Body).Decode(&createCartRequest); err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	cart := models.CartDBModelFromCreateRequest(createCartRequest)
+	cart := api.CartDBModelFromCreateRequest(createCartRequest)
 	if err := h.storage.Add(cart); err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -31,7 +32,7 @@ func (h CartHandler) PostCart(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h CartHandler) PatchCart(w http.ResponseWriter, r *http.Request) {
-	var updateCartRequest models.UpdateCartRequest
+	var updateCartRequest api.UpdateCartRequest
 	err := json.NewDecoder(r.Body).Decode(&updateCartRequest)
 	if err != nil {
 		log.Println(err)
@@ -40,7 +41,7 @@ func (h CartHandler) PatchCart(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// checks if request is empty
-	emptyRequest := models.UpdateCartRequest{}
+	emptyRequest := api.UpdateCartRequest{}
 	if emptyRequest == updateCartRequest {
 		w.WriteHeader(http.StatusNoContent)
 		return
@@ -67,7 +68,7 @@ func (h CartHandler) PatchCart(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if updateCartRequest.Products != nil {
-		var cartItems []models.CartItemDBModel
+		var cartItems []database.CartItemDBModel
 		var productHandler ProductHandler
 		var totalAmount float64
 
@@ -86,12 +87,12 @@ func (h CartHandler) PatchCart(w http.ResponseWriter, r *http.Request) {
 
 			// update total amount in cart
 			totalAmount += float64(cartItemQuantity) * e.Price
-			cartItems = append(cartItems, models.ProductToCartItemDBModelRequest(e))
+			cartItems = append(cartItems, api.ProductToCartItemDBModelRequest(e))
 		}
 		cart.Total = totalAmount
 		cart.CartItems = cartItems
 	}
-	// now saves the cart to db
+	// now saves the cart to database
 	if err := h.storage.Update(cart); err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -115,7 +116,7 @@ func (h CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	cartResponse := models.CartResponseFromDBModel(cart)
+	cartResponse := api.CartResponseFromDBModel(cart)
 	if err := json.NewEncoder(w).Encode(cartResponse); err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -125,7 +126,7 @@ func (h CartHandler) GetCart(w http.ResponseWriter, r *http.Request) {
 
 func (h CartHandler) PostCartCheckout(w http.ResponseWriter, r *http.Request) {
 	// unpacks json
-	var createCheckoutRequest models.CreateCheckoutRequest
+	var createCheckoutRequest api.CreateCheckoutRequest
 	err := json.NewDecoder(r.Body).Decode(createCheckoutRequest)
 	if err != nil {
 		log.Println(err)
@@ -134,7 +135,7 @@ func (h CartHandler) PostCartCheckout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// converts cart items to order items
-	order := models.OrderDBModelFromCreateCheckOutRequest(createCheckoutRequest)
+	order := api.OrderDBModelFromCreateCheckOutRequest(createCheckoutRequest)
 
 	// saves order
 	var orderHandler OrderHandler

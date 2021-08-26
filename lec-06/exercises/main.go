@@ -1,9 +1,7 @@
 package main
 
-import (
-	"exercises/database"
-)
+import "exercises/router"
 
 func main() {
-	database.ConnectDB()
+	router.InitServer()
 }

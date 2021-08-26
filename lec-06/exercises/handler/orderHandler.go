@@ -2,7 +2,8 @@ package handler
 
 import (
 	"encoding/json"
-	"exercises/models"
+	"exercises/models/api"
+	"exercises/models/database"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -10,11 +11,11 @@ import (
 )
 
 type OrderHandler struct {
-	storage models.OrderStorage
+	storage database.OrderStorage
 }
 
 func (h OrderHandler) GetOrders(w http.ResponseWriter, r *http.Request) {
-	var ordersResponse []models.OrderResponse
+	var ordersResponse []api.OrderResponse
 	orders, err := h.storage.All()
 	if err != nil {
 		log.Println(err)
@@ -23,7 +24,7 @@ func (h OrderHandler) GetOrders(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, e := range orders {
-		ordersResponse = append(ordersResponse, models.OrderResponseFromDBModel(e))
+		ordersResponse = append(ordersResponse, api.OrderResponseFromDBModel(e))
 	}
 
 	if err := json.NewEncoder(w).Encode(ordersResponse); err != nil {
@@ -48,7 +49,7 @@ func (h OrderHandler) GetOrder(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	orderResponse := models.OrderResponseFromDBModel(order)
+	orderResponse := api.OrderResponseFromDBModel(order)
 	if err := json.NewEncoder(w).Encode(orderResponse); err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
