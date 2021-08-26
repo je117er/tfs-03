@@ -2,8 +2,8 @@ package handler
 
 import (
 	"encoding/json"
-	"exercises/models/api"
-	"exercises/models/database"
+	"exercises/internal/models/api"
+	"exercises/internal/models/database"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"

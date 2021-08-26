@@ -1,6 +1,8 @@
 package api
 
-import "exercises/models/database"
+import (
+	database2 "exercises/internal/models/database"
+)
 
 type CreateCartRequest struct {
 	UserID int
@@ -15,8 +17,8 @@ type ProductToCartRequest struct {
 	Quantity int8
 }
 
-func ProductToCartItemDBModelRequest(p ProductToCartRequest) database.CartItemDBModel {
-	return database.CartItemDBModel{
+func ProductToCartItemDBModelRequest(p ProductToCartRequest) database2.CartItemDBModel {
+	return database2.CartItemDBModel{
 		CartID:    p.CartID,
 		Price:     p.Price,
 		Quantity:  p.Quantity,
@@ -37,7 +39,7 @@ type CartResponse struct {
 	Total     float64
 }
 
-func CartResponseFromDBModel(c database.CartDBModel) CartResponse {
+func CartResponseFromDBModel(c database2.CartDBModel) CartResponse {
 	var cartItems []cartItemResponse
 	for _, e := range c.CartItems {
 		cartItems = append(cartItems, cartItemResponseFromDBModel(e))
@@ -52,8 +54,8 @@ func CartResponseFromDBModel(c database.CartDBModel) CartResponse {
 	}
 }
 
-func CartDBModelFromCreateRequest(r CreateCartRequest) database.CartDBModel {
-	return database.CartDBModel{
+func CartDBModelFromCreateRequest(r CreateCartRequest) database2.CartDBModel {
+	return database2.CartDBModel{
 		UserID: r.UserID,
 		Total:  0,
 		Status: r.Status,
@@ -67,12 +69,12 @@ type CreateCheckoutRequest struct {
 	Total     float64
 }
 
-func OrderDBModelFromCreateCheckOutRequest(r CreateCheckoutRequest) database.OrderDBModel {
-	var orderItems []database.OrderItemDBModel
+func OrderDBModelFromCreateCheckOutRequest(r CreateCheckoutRequest) database2.OrderDBModel {
+	var orderItems []database2.OrderItemDBModel
 	for _, e := range r.CartItems {
 		orderItems = append(orderItems, CartToOrderItemDBModelRequest(e))
 	}
-	return database.OrderDBModel{
+	return database2.OrderDBModel{
 		UserID:     r.UserID,
 		Total:      r.Total,
 		OrderItems: orderItems,
@@ -80,8 +82,8 @@ func OrderDBModelFromCreateCheckOutRequest(r CreateCheckoutRequest) database.Ord
 	}
 }
 
-func CartToOrderItemDBModelRequest(r CartItemToOrderItemRequest) database.OrderItemDBModel {
-	return database.OrderItemDBModel{
+func CartToOrderItemDBModelRequest(r CartItemToOrderItemRequest) database2.OrderItemDBModel {
+	return database2.OrderItemDBModel{
 		ProductID: r.ProductID,
 		Price:     r.Price,
 		Quantity:  r.Quantity,

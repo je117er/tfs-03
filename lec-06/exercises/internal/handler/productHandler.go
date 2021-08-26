@@ -3,8 +3,8 @@ package handler
 import (
 	"encoding/json"
 	"errors"
-	"exercises/models/api"
-	"exercises/models/database"
+	"exercises/internal/models/api"
+	database2 "exercises/internal/models/database"
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"log"
@@ -13,7 +13,7 @@ import (
 )
 
 type ProductHandler struct {
-	storage database.ProductStorage
+	storage database2.ProductStorage
 }
 
 func (h ProductHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +47,7 @@ func (h ProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 	product, err := h.storage.ByID(productID)
 	if err != nil {
 		log.Println(err)
-		if errors.Is(err, database.ErrProductNotFound) {
+		if errors.Is(err, database2.ErrProductNotFound) {
 			w.WriteHeader(http.StatusNotFound)
 		} else {
 			w.WriteHeader(http.StatusInternalServerError)

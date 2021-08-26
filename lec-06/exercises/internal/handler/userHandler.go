@@ -3,8 +3,8 @@ package handler
 import (
 	"encoding/json"
 	"errors"
-	"exercises/models/api"
-	"exercises/models/database"
+	api2 "exercises/internal/models/api"
+	database2 "exercises/internal/models/database"
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"log"
@@ -13,7 +13,7 @@ import (
 )
 
 type UserHandler struct {
-	storage database.UserStorage
+	storage database2.UserStorage
 }
 
 func (h UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +27,7 @@ func (h UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	user, err := h.storage.ByID(userId)
 	if err != nil {
 		log.Println(err)
-		if errors.Is(err, database.ErrUserNotFound) {
+		if errors.Is(err, database2.ErrUserNotFound) {
 			w.WriteHeader(http.StatusNotFound)
 		} else {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -35,7 +35,7 @@ func (h UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userResponse := api.UserResponseFromDBModel(user)
+	userResponse := api2.UserResponseFromDBModel(user)
 	if err = json.NewEncoder(w).Encode(userResponse); err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -44,7 +44,7 @@ func (h UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h UserHandler) PostUser(w http.ResponseWriter, r *http.Request) {
-	var createUserRequest api.CreateUserRequest
+	var createUserRequest api2.CreateUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&createUserRequest); err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -58,7 +58,7 @@ func (h UserHandler) PostUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := api.UserDBModelFromCreateRequest(createUserRequest)
+	user, err := api2.UserDBModelFromCreateRequest(createUserRequest)
 	if err = h.storage.Add(user); err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -77,7 +77,7 @@ func (h UserHandler) PatchUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var updateUserRequest api.UpdateUserRequest
+	var updateUserRequest api2.UpdateUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&updateUserRequest); err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -85,7 +85,7 @@ func (h UserHandler) PatchUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// checks if request is empty
-	emptyRequest := api.UpdateUserRequest{}
+	emptyRequest := api2.UpdateUserRequest{}
 	if updateUserRequest == emptyRequest {
 		w.WriteHeader(http.StatusNoContent)
 		return
@@ -117,7 +117,7 @@ func (h UserHandler) PatchUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if updateUserRequest.Password != nil {
-		hashedPassword, err := api.HashPassword(*updateUserRequest.Password)
+		hashedPassword, err := api2.HashPassword(*updateUserRequest.Password)
 		if err != nil {
 			log.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)

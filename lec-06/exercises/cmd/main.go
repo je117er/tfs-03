@@ -1,6 +1,8 @@
 package main
 
-import "exercises/router"
+import (
+	"exercises/internal/router"
+)
 
 func main() {
 	router.InitServer()

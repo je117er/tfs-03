@@ -2,9 +2,9 @@ package handler
 
 import (
 	"encoding/json"
-	"exercises/config"
-	"exercises/models/api"
-	"exercises/models/database"
+	"exercises/internal/config"
+	"exercises/internal/models/api"
+	"exercises/internal/models/database"
 	"fmt"
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/charge"

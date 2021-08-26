@@ -1,8 +1,8 @@
 package router
 
 import (
-	"exercises/config"
-	"exercises/handler"
+	"exercises/internal/config"
+	handler2 "exercises/internal/handler"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -12,11 +12,11 @@ func InitServer() {
 	config.ConnectDB()
 	r := mux.NewRouter()
 
-	userHandler := handler.UserHandler{}
-	productHandler := handler.ProductHandler{}
-	cartHandler := handler.CartHandler{}
-	orderHandler := handler.OrderHandler{}
-	paymentHandler := handler.PaymentHandler{}
+	userHandler := handler2.UserHandler{}
+	productHandler := handler2.ProductHandler{}
+	cartHandler := handler2.CartHandler{}
+	orderHandler := handler2.OrderHandler{}
+	paymentHandler := handler2.PaymentHandler{}
 
 	// handles users
 	r.HandleFunc("/user/{id:\\d+}", userHandler.GetUser).Methods("GET")

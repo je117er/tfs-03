@@ -1,7 +1,7 @@
 package config
 
 import (
-	"exercises/models/database"
+	database2 "exercises/internal/models/database"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -23,7 +23,7 @@ func ConnectDB() {
 		log.Fatalf("failed to connect to database %s", err)
 	}
 
-	err = db.AutoMigrate(&database.UserDBModel{}, &database.ProductDBModel{}, &database.PaymentDBModel{}, &database.OrderDBModel{}, &database.OrderItemDBModel{}, &database.CartDBModel{}, &database.CartItemDBModel{})
+	err = db.AutoMigrate(&database2.UserDBModel{}, &database2.ProductDBModel{}, &database2.PaymentDBModel{}, &database2.OrderDBModel{}, &database2.OrderItemDBModel{}, &database2.CartDBModel{}, &database2.CartItemDBModel{})
 	if err != nil {
 		log.Fatal("failed to apply migrations")
 	}

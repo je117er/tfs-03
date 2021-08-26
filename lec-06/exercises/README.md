@@ -4,7 +4,7 @@
 * Refactor to reduce inconsistencies.
 * Add more validation.
 ## ER Diagram
-![ER diagram for this exercise](db_diagram.jpg)
+![ER diagram for this exercise](static/db_diagram.jpg)
 ## API endpoints
 ### User
 * GET /user/:id

@@ -2,8 +2,8 @@ package handler
 
 import (
 	"encoding/json"
-	"exercises/models/api"
-	"exercises/models/database"
+	"exercises/internal/models/api"
+	database2 "exercises/internal/models/database"
 	"github.com/gorilla/mux"
 	"log"
 	"math"
@@ -12,7 +12,7 @@ import (
 )
 
 type CartHandler struct {
-	storage database.CartStorage
+	storage database2.CartStorage
 }
 
 func (h CartHandler) PostCart(w http.ResponseWriter, r *http.Request) {
@@ -68,7 +68,7 @@ func (h CartHandler) PatchCart(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if updateCartRequest.Products != nil {
-		var cartItems []database.CartItemDBModel
+		var cartItems []database2.CartItemDBModel
 		var productHandler ProductHandler
 		var totalAmount float64
 

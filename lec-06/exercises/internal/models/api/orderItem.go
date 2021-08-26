@@ -1,6 +1,8 @@
 package api
 
-import "exercises/models/database"
+import (
+	"exercises/internal/models/database"
+)
 
 type OrderItemResponse struct {
 	ID        int

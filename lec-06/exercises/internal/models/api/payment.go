@@ -1,7 +1,7 @@
 package api
 
 import (
-	"exercises/models/database"
+	"exercises/internal/models/database"
 	"time"
 )
 
