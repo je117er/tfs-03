@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	searchTerm = "this book has changed my life!"
+	searchTerm = "donald trump could've made america great again"
 	ctx        = context.Background()
 )
 
@@ -36,9 +36,10 @@ func mysqlElapsed() time.Duration {
 	if err != nil {
 		log.Fatal(err)
 	}
+	elapsed := time.Since(start)
 	defer rows.Close()
 
-	return time.Since(start)
+	return elapsed
 }
 
 func esElapsed() float64 {
@@ -63,6 +64,7 @@ func esElapsed() float64 {
 
 	// searches for a term
 	termQuery := elastic.NewMatchQuery("body", searchTerm)
+	start := time.Now()
 	searchResult, err := client.Search().
 		Index("reviews").
 		Query(termQuery).
@@ -70,7 +72,7 @@ func esElapsed() float64 {
 	if err != nil {
 		log.Printf("error %s occured while searching", err)
 	}
-
+	log.Println(time.Since(start))
 	// by default the number of hits is limited to 10,000
 	// reference: https://www.elastic.co/guide/en/elasticsearch/reference/current/paginate-search-results.html
 	log.Printf("Found %d results", searchResult.TotalHits())
@@ -80,8 +82,8 @@ func esElapsed() float64 {
 
 func main() {
 
-	mysqlElapsed := mysqlElapsed()
+	//mysqlElapsed := mysqlElapsed()
 	esElapsed := esElapsed()
-	log.Printf("Query by MySQL took %s\n", mysqlElapsed)
+	//log.Printf("Query by MySQL took %s\n", mysqlElapsed)
 	log.Printf("Query by Elasticsearch took %fs\n", esElapsed)
 }
