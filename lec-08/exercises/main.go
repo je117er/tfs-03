@@ -17,7 +17,7 @@ var (
 	ctx        = context.Background()
 )
 
-func connectDB() time.Duration {
+func mysqlElapsed() time.Duration {
 	p := config.Config("DB_PORT")
 	port, err := strconv.ParseUint(p, 10, 32)
 	if err != nil {
@@ -41,7 +41,7 @@ func connectDB() time.Duration {
 	return time.Since(start)
 }
 
-func esBenchmark() float64 {
+func esElapsed() float64 {
 	// starts a new es client
 	client, err := elastic.NewClient()
 	if err != nil {
@@ -62,7 +62,7 @@ func esBenchmark() float64 {
 	fmt.Println("Index exists!")
 
 	// searches for a term
-	termQuery := elastic.NewMatchQuery("body", "e")
+	termQuery := elastic.NewMatchQuery("body", searchTerm)
 	searchResult, err := client.Search().
 		Index("reviews").
 		Query(termQuery).
@@ -80,8 +80,8 @@ func esBenchmark() float64 {
 
 func main() {
 
-	mysqlElapsed := connectDB()
-	esElapsed := esBenchmark()
+	mysqlElapsed := mysqlElapsed()
+	esElapsed := esElapsed()
 	log.Printf("Query by MySQL took %s\n", mysqlElapsed)
 	log.Printf("Query by Elasticsearch took %fs\n", esElapsed)
 }
