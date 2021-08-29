@@ -4,7 +4,7 @@
 * For the phrase "really awful", MySQL seemed to be faster than ES at first but ES quickly caught up and overcame MySQL at subsequence searches. Let's see if MySQL can do the same thing as ES in the next example.
 
 ![mysql vs. elastic search querying performance](ESvsMySQL/static/awfulQuery.jpg "MySQL vs. ElasticSearch querying performance")
-* Here ES was actually slower than MySQL. It should be noted that ES's speed for the same query eventually matched that of MySQL (which isn't shown here). So MySQL's querying speed is decreasing as well, can it keep up with a different query?
+* Here ES was actually slower than MySQL. It should be noted that ES's speed for the same query eventually matched that of MySQL (which isn't shown here). So MySQL's querying speed was increasing as well, can it keep up with a different query?
 
 ![mysql vs i can honestly](ESvsMySQL/static/canHonestlyQuery.jpg)
 
