@@ -8,16 +8,17 @@ import (
 	"github.com/je117er/tfs-03/lec-08/exercises/config"
 	"github.com/olivere/elastic/v7"
 	"log"
+	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
 var (
-	searchTerm = "donald trump could've made america great again"
-	ctx        = context.Background()
+	ctx = context.Background()
 )
 
-func mysqlElapsed() time.Duration {
+func mysqlElapsed(searchTerm string) time.Duration {
 	p := config.Config("DB_PORT")
 	port, err := strconv.ParseUint(p, 10, 32)
 	if err != nil {
@@ -32,7 +33,7 @@ func mysqlElapsed() time.Duration {
 
 	matchTerm := "%" + searchTerm + "%"
 	start := time.Now()
-	rows, err := db.QueryContext(ctx, "SELECT * FROM reviews WHERE body LIKE ?", matchTerm)
+	rows, err := db.QueryContext(ctx, "SELECT * FROM reviews WHERE body LIKE ? limit 3", matchTerm)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -42,48 +43,49 @@ func mysqlElapsed() time.Duration {
 	return elapsed
 }
 
-func esElapsed() float64 {
+func esElapsed(searchTerm string) time.Duration {
 	// starts a new es client
 	client, err := elastic.NewClient()
 	if err != nil {
 		log.Fatal(err)
 	}
-	// pings es server to get version number
-	info, code, err := client.Ping("http://localhost:9200").Do(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Es returned with code %d and version %s\n", code, info.Version.Number)
-
-	// checks if an index exists
-	_, err = client.IndexExists("reviews").Do(ctx)
-	if err != nil {
-		log.Fatalf("Index %s doesn't exist", err)
-	}
-	fmt.Println("Index exists!")
 
 	// searches for a term
-	termQuery := elastic.NewMatchQuery("body", searchTerm)
+	termQuery := elastic.NewMatchPhraseQuery("body", searchTerm)
 	start := time.Now()
-	searchResult, err := client.Search().
+	_, err = client.Search().
 		Index("reviews").
 		Query(termQuery).
 		Pretty(true).Do(ctx)
 	if err != nil {
 		log.Printf("error %s occured while searching", err)
 	}
-	log.Println(time.Since(start))
+	elapsed := time.Since(start)
+	//log.Println(time.Since(start))
 	// by default the number of hits is limited to 10,000
 	// reference: https://www.elastic.co/guide/en/elasticsearch/reference/current/paginate-search-results.html
-	log.Printf("Found %d results", searchResult.TotalHits())
+	//log.Printf("Found %d results", searchResult.TotalHits())
 
-	return float64(searchResult.TookInMillis) / 1000
+	return elapsed
+}
+
+func printHelper(engineChoice int, elapsed string, searchTerm string) {
+	var engine string
+	switch engineChoice {
+	case 1:
+		engine = "MySQL"
+	case 2:
+		engine = "Elasticsearch"
+	}
+	log.Printf("Query for %q by %s took %s", searchTerm, engine, elapsed)
 }
 
 func main() {
-
-	//mysqlElapsed := mysqlElapsed()
-	esElapsed := esElapsed()
-	//log.Printf("Query by MySQL took %s\n", mysqlElapsed)
-	log.Printf("Query by Elasticsearch took %fs\n", esElapsed)
+	searchTerm := strings.Join(os.Args[1:], " ")
+	for i := 0; i < 10; i++ {
+		printHelper(1, mysqlElapsed(searchTerm).String(), searchTerm)
+	}
+	for i := 0; i < 10; i++ {
+		printHelper(2, esElapsed(searchTerm).String(), searchTerm)
+	}
 }
