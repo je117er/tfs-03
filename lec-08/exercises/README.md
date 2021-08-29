@@ -1,12 +1,11 @@
 # Overview
 ## MySQL vs. ElasticSearch querying performance comparison
 * For the sake of brevity, only 3 phrases were tested. Since we were going to compare the performance between MySQL's **LIKE** with an Elasticsearch's equivalence, it's only fair to use **match_phrase** since this query requires a response to contain [exactly](https://stackoverflow.com/questions/26001002/elasticsearch-difference-between-term-match-phrase-and-query-string) the original phrase.
-* For the phrase "really awful", MySQL seemed to be faster than ES at first but ES quickly caught up and overcame MySQL at subsequence searches.
-![mysql vs. elastic search querying performance](ESvsMySQL/awfulQuery.jpg "MySQL vs. ElasticSearch querying performance")
-Let's see if MySQL can do the same thing like ES in the next example.
-* Here ES was actually slower than MySQL. It should be noted that ES's speed for the same query eventually matched that of MySQL (which isn't shown here).
+* For the phrase "really awful", MySQL seemed to be faster than ES at first but ES quickly caught up and overcame MySQL at subsequence searches. Let's see if MySQL can do the same thing as ES in the next example.
+![mysql vs. elastic search querying performance](ESvsMySQL/static/awfulQuery.jpg "MySQL vs. ElasticSearch querying performance")
+* Here ES was actually slower than MySQL. It should be noted that ES's speed for the same query eventually matched that of MySQL (which isn't shown here). So MySQL's querying speed is decreasing as well, can it keep up with a different query?
 ![mysql vs i can honestly](ESvsMySQL/static/canHonestlyQuery.jpg)
-So MySQL's querying speed is decreasing as well, can it keep up with a different query?
+
 * Unfortunately, there's not much of a difference between various MySQL's querying speeds here. Moreover, ES trumped MySQL by a large margin from the outset.
 ![mysql vs i can honestly](ESvsMySQL/static/canAttestQuery.jpg)
 ### Conclusion
