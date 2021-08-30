@@ -33,7 +33,7 @@ func mysqlElapsed(searchTerm string) time.Duration {
 
 	matchTerm := "%" + searchTerm + "%"
 	start := time.Now()
-	rows, err := db.QueryContext(ctx, "SELECT * FROM reviews WHERE body LIKE ? limit 3", matchTerm)
+	rows, err := db.QueryContext(ctx, "SELECT * FROM reviews WHERE body LIKE ?", matchTerm)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,7 +56,7 @@ func esElapsed(searchTerm string) time.Duration {
 	_, err = client.Search().
 		Index("reviews").
 		Query(termQuery).
-		Pretty(true).Do(ctx)
+		Do(ctx)
 	if err != nil {
 		log.Printf("error %s occured while searching", err)
 	}
