@@ -5,7 +5,7 @@
       <label :for="id" class="checkbox-label">{{label}}</label>
     </div>
     <div class="btn-group">
-      <button type="button" class="btn" @click="toggleToItemEditForm">
+      <button type="button" class="btn" ref="editButton" @click="toggleToItemEditForm">
         Edit <span class="visually-hidden">{{label}}</span>
       </button>
       <button type="button" class="btn btn__danger" @click="deleteToDo">
@@ -13,7 +13,7 @@
       </button>
     </div>
   </div>
-  <to-do-item-edit-form v-else :id="id" :label="label" @item-edited="itemEdited" @edit-cancelled="editCancelled"></to-do-item-edit-form>
+  <to-do-item-edit-form v-else :id="id" :label="label" ref="saveButton" @item-edited="itemEdited" @edit-cancelled="editCancelled"></to-do-item-edit-form>
 </template>
 
 <script>
@@ -41,14 +41,29 @@
        this.$emit('item-deleted')
      },
      toggleToItemEditForm() {
+       console.log(this.$refs.editButton)
        this.isEditing = true;
+       this.focusOnSaveButton();
+     },
+     focusOnSaveButton() {
+       this.$nextTick(() => {
+         this.$refs.saveButton.focus();
+       })
+     },
+     focusOnEditButton() {
+       this.$nextTick(() => {
+         const editButtonRef = this.$refs.editButton;
+         editButtonRef.focus();
+       })
      },
      itemEdited(newLabel) {
        this.$emit('item-edited', newLabel);
        this.isEditing = false;
+       this.focusOnEditButton()
      },
      editCancelled() {
        this.isEditing = false;
+       this.focusOnEditButton()
      }
    }
  };

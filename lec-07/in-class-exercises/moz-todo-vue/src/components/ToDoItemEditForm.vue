@@ -44,7 +44,7 @@ export default {
     },
     onCancel() {
       this.$emit("edit-cancelled");
-    }
+    },
   }
 };
 </script>
