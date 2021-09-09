@@ -1,6 +1,6 @@
 package models
 
 type InfoResponse struct {
-	ID    uint
+	ID    int
 	Email string
 }

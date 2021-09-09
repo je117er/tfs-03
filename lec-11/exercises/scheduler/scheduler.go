@@ -123,7 +123,7 @@ func (sched *Scheduler) scanFromDB() ([]*models.InfoResponse, error) {
 	defer rows.Close()
 
 	var infoResponses []*models.InfoResponse
-	var id uint
+	var id int
 	var email string
 
 	for rows.Next() {
@@ -148,8 +148,10 @@ func (sched *Scheduler) publish(exch, routingKey, body string) error {
 		false,
 		false,
 		amqp.Publishing{
-			ContentType:  "text/plain",
-			Body:         []byte(body),
+			// references: https://www.rabbitmq.com/publishers.html#message-properties
+			ContentType: "application/json",
+			Body:        []byte(body),
+			// together with durable queues, messages inside are recoverable
 			DeliveryMode: amqp.Persistent,
 		},
 	); err != nil {
