@@ -28,7 +28,7 @@ func main() {
 	defer DB.Close()
 
 	// initializes rabbitmq client
-	rmqSource := fmt.Sprintf("amqp://%s:%s@%s:%s/", config.Config("RMQ_USERNAME"), config.Config("RMQ_USERNAME"), config.Config("RMQ_USERNAME"), config.Config("RMQ_USERNAME"))
+	rmqSource := fmt.Sprintf("amqp://%s:%s@%s:%s/", config.Config("RMQ_USERNAME"), config.Config("RMQ_PASSWORD"), config.Config("RMQ_HOST"), config.Config("RMQ_PORT"))
 	client := rmqClient.NewRMQClient(rmqSource)
 
 	// two channels for two actors

@@ -1,7 +1,7 @@
 # Project info
 * Reimplementation of an in-class exercise using RabbitMQ.
-## Todo
-* Integrate the [worker pattern](https://divan.dev/posts/go_concurrency_visualize/)
+## Wishlist
+* Integrate the [workers pattern](https://divan.dev/posts/go_concurrency_visualize/)
 into the code so multiple workers can shoulder the workload.
 ## Directory structure
 ```bigquery
