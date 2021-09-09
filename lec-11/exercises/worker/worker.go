@@ -73,7 +73,7 @@ func (w *Worker) Start() {
 			log.Println("Message received")
 			msg.Ack(false) // manually acknowledging
 
-			// response containing a list of info
+			// body containing a list of info
 			body, err := utils.Deserialize(msg.Body)
 			if err != nil {
 				log.Println(err)

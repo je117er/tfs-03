@@ -73,7 +73,7 @@ func (sched *Scheduler) scheduleJob() {
 	// scans for new orders
 	log.Println("Scanning for new orders...")
 
-	resp, err := sched.getEmailsForSending()
+	resp, err := sched.getInfoForSending()
 	if err != nil {
 		return
 	}
@@ -94,7 +94,7 @@ func (sched *Scheduler) insertData(records int) error {
 	var inserts []string
 	for i := 0; i < records; i++ {
 		inserts = append(inserts, "(?)")
-		vals = append(vals, utils.RandSeq(USERLENGTH)+"@gmail.com")
+		vals = append(vals, utils.MakeRandSeq(USERLENGTH)+"@gmail.com")
 	}
 	sqlStr = sqlStr + strings.Join(inserts, ",")
 	_, err := sched.DB.Exec(sqlStr, vals...)
@@ -104,7 +104,7 @@ func (sched *Scheduler) insertData(records int) error {
 	return nil
 }
 
-func (sched *Scheduler) getEmailsForSending() ([]*models.InfoResponse, error) {
+func (sched *Scheduler) getInfoForSending() ([]*models.InfoResponse, error) {
 	resp, err := sched.scanFromDB()
 	if err != nil {
 		return nil, err
@@ -113,7 +113,7 @@ func (sched *Scheduler) getEmailsForSending() ([]*models.InfoResponse, error) {
 }
 
 func (sched *Scheduler) scanFromDB() ([]*models.InfoResponse, error) {
-	rows, err := sched.DB.Query("SELECT id, email FROM users WHERE sent_confirm_email = ?", 0)
+	rows, err := sched.DB.Query("SELECT id, email FROM users WHERE sent_confirm_email = ?", false)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, sql.ErrNoRows
