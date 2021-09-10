@@ -43,7 +43,7 @@ func NewWorker(wg *sync.WaitGroup, ctx context.Context, DB *sql.DB, chann *amqp.
 }
 
 func (w *Worker) Start() {
-	if w.consumer.chann == nil || w.consumer.queue == "" || w.consumer.exchType == "" || w.consumer.bindingKey == "" {
+	if w.consumer.chann == nil || w.consumer.queue == "" {
 		log.Println("Incorrect consumer config")
 	}
 
